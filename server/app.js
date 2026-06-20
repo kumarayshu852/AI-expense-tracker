@@ -22,11 +22,14 @@ app.use(cors({
 }));
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 मिनट
-  max: 100, // हर IP से अधिकतम 100 रिक्वेस्ट
-  standardHeaders: true, // v6+ के लिए अनुशंसित
-  legacyHeaders: false, 
+  windowMs: 15 * 60 * 1000,
+  max: 500, // 100 se 500 kiya — health check polling + multiple users same IP se handle karne ke liye
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests, please try again later.',
+  skip: (req) => req.path === '/api/health', // health check ko count hi nahi karo
 });
+
 app.use('/api',limiter);
 
 app.use(express.json());
