@@ -1,0 +1,13 @@
+const express = require('express');
+const router = express.Router();
+const aiController = require('../controllers/aiController');
+const { protect } = require('../middleware/authMiddleware');
+
+router.use(protect);
+
+router.post('/chat', aiController.chat);
+router.get('/insights', aiController.getInsights);
+router.get('/history', aiController.getHistory);
+router.delete('/history', aiController.clearHistory);
+
+module.exports = router;
