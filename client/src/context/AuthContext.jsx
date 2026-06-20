@@ -15,8 +15,13 @@ export const AuthProvider = ({ children }) => {
           const res = await api.get('/auth/me')
           setUser(res.data.data.user)
         } catch (err) {
-          localStorage.removeItem('token')
-          setToken(null)
+          // Sirf real "Unauthorized" (invalid/expired token) pe logout karo.
+          // Network error, timeout, ya server cold-start pe token mat hatao —
+          // warna user ko galat tareeke se logout dikhega.
+          if (err.response?.status === 401) {
+            localStorage.removeItem('token')
+            setToken(null)
+          }
         }
       }
       setLoading(false)
@@ -48,7 +53,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null)
   }
 
-  // Profile update hone ke baad sidebar/topbar mein naam turant reflect ho jaye, isliye yeh function
   const updateUser = (updatedFields) => {
     setUser((prev) => ({ ...prev, ...updatedFields }))
   }
