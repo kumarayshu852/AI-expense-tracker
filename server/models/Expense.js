@@ -1,18 +1,23 @@
 const mongoose = require('mongoose');
 
+
 const CATEGORIES = [
-    'Food & Dining',
-    'Transport',
-    'Shopping',
-    'Bills & Utilities',
-    'Entertainment',
-    'Health',
-    'Education',
-    'Travel',
-    'Investment',
-    'Income',
-    'Others',
+  'Food & Dining',
+  'Groceries',
+  'Transport',
+  'Shopping',
+  'Bills & Utilities',
+  'Entertainment',
+  'Health',
+  'Education',
+  'Travel',
+  'Investment',
+  'Loans & Lending',
+  'Personal & Lifestyle',
+  'Income',
+  'Others',
 ];
+
 
 const PAYMENT_METHODS = [
     'Cash',

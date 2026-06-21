@@ -1,19 +1,6 @@
 import { motion } from 'framer-motion'
 import { Trash2, AlertTriangle } from 'lucide-react'
-
-const categoryEmoji = {
-  'Food & Dining': '🍔',
-  'Transport': '🚗',
-  'Shopping': '🛍️',
-  'Bills & Utilities': '💡',
-  'Entertainment': '🎬',
-  'Health': '🏥',
-  'Education': '📚',
-  'Travel': '✈️',
-  'Investment': '📈',
-  'Income': '💰',
-  'Others': '📦',
-}
+import { getCategoryIcon } from '../../utils/categoryIcons'
 
 const getBarColor = (percentage) => {
   if (percentage >= 100) return 'bg-red-500'
@@ -23,6 +10,7 @@ const getBarColor = (percentage) => {
 
 const BudgetCard = ({ budget, onDelete }) => {
   const { category, monthlyLimit, spent, remaining, percentage } = budget
+  const { icon: Icon, color, bg } = getCategoryIcon(category)
   const isOverBudget = percentage >= 100
   const clampedPercentage = Math.min(percentage, 100)
 
@@ -34,7 +22,9 @@ const BudgetCard = ({ budget, onDelete }) => {
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl">{categoryEmoji[category] || '📦'}</span>
+          <div className={`w-10 h-10 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
+            <Icon className={`w-5 h-5 ${color}`} />
+          </div>
           <div>
             <p className="text-[var(--text-primary)] font-medium">{category}</p>
             <p className="text-[var(--text-secondary)] text-xs">Monthly limit: ₹{monthlyLimit.toLocaleString('en-IN')}</p>
@@ -48,7 +38,6 @@ const BudgetCard = ({ budget, onDelete }) => {
         </button>
       </div>
 
-      {/* Progress bar */}
       <div className="w-full h-2 bg-[var(--bg-secondary)] rounded-full overflow-hidden mb-2">
         <motion.div
           initial={{ width: 0 }}
