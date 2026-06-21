@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Plus, Loader2, Download, FileText } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Plus, Loader2, Download, FileText, Search } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ExpenseForm from '../components/expenses/ExpenseForm'
-import ExpenseTable from '../components/expenses/ExpenseTable'
+import MonthAccordion from '../components/expenses/MonthAccordion'
 import {
   getExpenses,
   createExpense,
@@ -10,16 +10,19 @@ import {
   deleteExpense,
 } from '../services/expenseService'
 import { exportToCSV, exportToPDF } from '../utils/exportReports'
+import { groupExpensesByMonth, formatDateForSearch } from '../utils/groupByMonth'
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(true)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingExpense, setEditingExpense] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchExpenses = async () => {
     try {
-      const res = await getExpenses()
+      // Saari transactions ek baar mein fetch karo (month-wise grouping ke liye), pagination skip
+      const res = await getExpenses({ limit: 1000 })
       setExpenses(res.data.data.expenses)
     } catch (err) {
       console.error('Failed to fetch expenses:', err)
@@ -61,7 +64,19 @@ const Expenses = () => {
     }
   }
 
-  // Summary calculate karo PDF mein dikhane ke liye
+  // Search query se date match karo — jaise "14/6" type karne par 14/6/2026 wali entries dikhe
+  const filteredExpenses = useMemo(() => {
+    if (!searchQuery.trim()) return expenses
+    const query = searchQuery.trim().toLowerCase()
+    return expenses.filter((exp) => {
+      const dateStr = formatDateForSearch(exp.date)
+      return dateStr.includes(query) || exp.title.toLowerCase().includes(query)
+    })
+  }, [expenses, searchQuery])
+
+  const monthGroups = useMemo(() => groupExpensesByMonth(filteredExpenses), [filteredExpenses])
+
+  // Summary PDF export ke liye
   const summary = expenses.reduce(
     (acc, e) => {
       if (e.type === 'income') acc.totalIncome += e.amount
@@ -77,7 +92,7 @@ const Expenses = () => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="text-[var(--text-primary)] text-xl font-semibold">All Transactions</h2>
           <p className="text-[var(--text-secondary)] text-sm mt-0.5">Manage your income and expenses</p>
@@ -114,13 +129,37 @@ const Expenses = () => {
         </div>
       </div>
 
+      {/* Search bar */}
+      <div className="relative mb-5">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by date (e.g. 14/6) or title..."
+          className="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl pl-10 pr-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-primary"
+        />
+      </div>
+
       {loading ? (
         <div className="flex items-center justify-center h-60">
           <Loader2 className="w-8 h-8 text-primary animate-spin" />
         </div>
+      ) : monthGroups.length === 0 ? (
+        <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-10 text-center">
+          <p className="text-[var(--text-secondary)] text-sm">No transactions found</p>
+        </div>
       ) : (
-        <div className="overflow-x-auto">
-          <ExpenseTable expenses={expenses} onEdit={handleEditClick} onDelete={handleDelete} />
+        <div className="space-y-3">
+          {monthGroups.map((group, i) => (
+            <MonthAccordion
+              key={group.key}
+              group={group}
+              defaultOpen={i === 0}
+              onEdit={handleEditClick}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
       )}
 
