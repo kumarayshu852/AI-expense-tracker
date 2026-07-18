@@ -3,7 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import ExpenseTable from './ExpenseTable'
 
+<<<<<<< HEAD
 const MonthAccordion = ({ group, defaultOpen = false, onEdit, onDelete, categories }) => {
+=======
+const MonthAccordion = ({ group, defaultOpen = false, onEdit, onDelete }) => {
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
@@ -35,12 +39,16 @@ const MonthAccordion = ({ group, defaultOpen = false, onEdit, onDelete, categori
             className="overflow-hidden"
           >
             <div className="px-5 pb-5 pt-1 border-t border-[var(--border)]">
+<<<<<<< HEAD
               <ExpenseTable
                 expenses={group.expenses}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 categories={categories}
               />
+=======
+              <ExpenseTable expenses={group.expenses} onEdit={onEdit} onDelete={onDelete} />
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
             </div>
           </motion.div>
         )}

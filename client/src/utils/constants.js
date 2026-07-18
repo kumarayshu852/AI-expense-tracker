@@ -1,5 +1,6 @@
 export const CATEGORIES = [
   'Food & Dining',
+  'Groceries',
   'Transport',
   'Shopping',
   'Bills & Utilities',
@@ -8,6 +9,8 @@ export const CATEGORIES = [
   'Education',
   'Travel',
   'Investment',
+  'Loans & Lending',
+  'Personal & Lifestyle',
   'Income',
   'Others',
 ]

@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
   UtensilsCrossed, Car, ShoppingBag, Lightbulb, Clapperboard,
   HeartPulse, BookOpen, Plane, TrendingUp, Wallet, Package,
   Carrot, HandCoins, Sparkles, Star, Coffee, Music, Gift,
@@ -30,6 +31,25 @@ export const availableIcons = [
 ]
 
 // Default categories ka static icon+color map (fast rendering ke liye — API call nahi karna)
+=======
+  UtensilsCrossed,
+  Car,
+  ShoppingBag,
+  Lightbulb,
+  Clapperboard,
+  HeartPulse,
+  BookOpen,
+  Plane,
+  TrendingUp,
+  Wallet,
+  Package,
+  Carrot,
+  HandCoins,
+  Sparkles,
+} from 'lucide-react'
+
+// Har category ke liye icon + color — ek hi jagah se manage hota hai
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
 export const categoryIconMap = {
   'Food & Dining': { icon: UtensilsCrossed, color: 'text-orange-400', bg: 'bg-orange-500/10' },
   'Groceries': { icon: Carrot, color: 'text-lime-400', bg: 'bg-lime-500/10' },
@@ -47,6 +67,7 @@ export const categoryIconMap = {
   'Others': { icon: Package, color: 'text-gray-400', bg: 'bg-gray-500/10' },
 }
 
+<<<<<<< HEAD
 // Category name se icon+color return karta hai
 // Custom categories ke liye icon string + hex color use karta hai
 export const getCategoryIcon = (category, customIcon, customColor) => {
@@ -61,3 +82,6 @@ export const getCategoryIcon = (category, customIcon, customColor) => {
     customColor,
   }
 }
+=======
+export const getCategoryIcon = (category) => categoryIconMap[category] || categoryIconMap['Others']
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41

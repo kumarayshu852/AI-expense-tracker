@@ -3,9 +3,18 @@ import { Plus, Loader2, Download, FileText, Search } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ExpenseForm from '../components/expenses/ExpenseForm'
 import MonthAccordion from '../components/expenses/MonthAccordion'
+<<<<<<< HEAD
 import FilterBar from '../components/expenses/FilterBar'
 import { getExpenses, createExpense, updateExpense, deleteExpense } from '../services/expenseService'
 import { getCategories } from '../services/categoryService'
+=======
+import {
+  getExpenses,
+  createExpense,
+  updateExpense,
+  deleteExpense,
+} from '../services/expenseService'
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
 import { exportToCSV, exportToPDF } from '../utils/exportReports'
 import { groupExpensesByMonth, formatDateForSearch } from '../utils/groupByMonth'
 
@@ -16,7 +25,22 @@ const Expenses = () => {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingExpense, setEditingExpense] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+<<<<<<< HEAD
   const [filters, setFilters] = useState({ type: 'all', category: 'all', startDate: '', endDate: '' })
+=======
+
+  const fetchExpenses = async () => {
+    try {
+      // Saari transactions ek baar mein fetch karo (month-wise grouping ke liye), pagination skip
+      const res = await getExpenses({ limit: 1000 })
+      setExpenses(res.data.data.expenses)
+    } catch (err) {
+      console.error('Failed to fetch expenses:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
 
   useEffect(() => {
     const init = async () => {
@@ -64,6 +88,7 @@ const Expenses = () => {
     catch (err) { console.error('Failed to delete:', err) }
   }
 
+<<<<<<< HEAD
   // Search + Filter logic
   const filteredExpenses = useMemo(() => {
     let result = expenses
@@ -100,6 +125,21 @@ const Expenses = () => {
 
   const monthGroups = useMemo(() => groupExpensesByMonth(filteredExpenses), [filteredExpenses])
 
+=======
+  // Search query se date match karo — jaise "14/6" type karne par 14/6/2026 wali entries dikhe
+  const filteredExpenses = useMemo(() => {
+    if (!searchQuery.trim()) return expenses
+    const query = searchQuery.trim().toLowerCase()
+    return expenses.filter((exp) => {
+      const dateStr = formatDateForSearch(exp.date)
+      return dateStr.includes(query) || exp.title.toLowerCase().includes(query)
+    })
+  }, [expenses, searchQuery])
+
+  const monthGroups = useMemo(() => groupExpensesByMonth(filteredExpenses), [filteredExpenses])
+
+  // Summary PDF export ke liye
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
   const summary = expenses.reduce(
     (acc, e) => {
       if (e.type === 'income') acc.totalIncome += e.amount
@@ -174,7 +214,11 @@ const Expenses = () => {
         </div>
       ) : monthGroups.length === 0 ? (
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-10 text-center">
+<<<<<<< HEAD
           <p className="text-[var(--text-secondary)] text-sm">No transaction found.</p>
+=======
+          <p className="text-[var(--text-secondary)] text-sm">No transactions found</p>
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
         </div>
       ) : (
         <div className="space-y-3">
@@ -185,7 +229,10 @@ const Expenses = () => {
               defaultOpen={i === 0}
               onEdit={handleEditClick}
               onDelete={handleDelete}
+<<<<<<< HEAD
               categories={categories}
+=======
+>>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
             />
           ))}
         </div>
