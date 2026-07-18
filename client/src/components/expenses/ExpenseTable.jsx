@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { Pencil, Trash2, ArrowUpRight, ArrowDownRight } from 'lucide-react'
-<<<<<<< HEAD
 import { iconComponents, getCategoryIcon } from '../../utils/categoryIcons'
 
 const ExpenseTable = ({ expenses = [], onEdit, onDelete, categories = [] }) => {
@@ -40,9 +39,6 @@ const ExpenseTable = ({ expenses = [], onEdit, onDelete, categories = [] }) => {
       </div>
     )
   }
-=======
-import { getCategoryIcon } from '../../utils/categoryIcons'
->>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
 
   if (expenses.length === 0) {
     return (
@@ -56,7 +52,6 @@ import { getCategoryIcon } from '../../utils/categoryIcons'
     <>
       {/* Mobile: Card list */}
       <div className="md:hidden space-y-3">
-<<<<<<< HEAD
         {expenses.map((exp, i) => (
           <motion.div
             key={exp._id}
@@ -102,60 +97,6 @@ import { getCategoryIcon } from '../../utils/categoryIcons'
       </div>
 
       {/* Desktop: Table */}
-=======
-        {expenses.map((exp, i) => {
-          const { icon: Icon, color, bg } = getCategoryIcon(exp.category)
-          return (
-            <motion.div
-              key={exp._id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
-              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
-                    <Icon className={`w-4 h-4 ${color}`} />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[var(--text-primary)] font-medium truncate">{exp.title}</p>
-                    <p className="text-[var(--text-secondary)] text-xs">{exp.category} · {exp.paymentMethod}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => onEdit(exp)}
-                    className="p-2 rounded-md text-[var(--text-secondary)] hover:text-primary hover:bg-primary/10 transition"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(exp._id)}
-                    className="p-2 rounded-md text-[var(--text-secondary)] hover:text-red-400 hover:bg-red-500/10 transition"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border)]">
-                <span className="text-[var(--text-secondary)] text-xs">
-                  {new Date(exp.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </span>
-                <span className={`flex items-center gap-1 font-medium text-sm ${exp.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
-                  {exp.type === 'income' ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
-                  ₹{exp.amount.toLocaleString('en-IN')}
-                </span>
-              </div>
-            </motion.div>
-          )
-        })}
-      </div>
-
-      {/* Desktop/Tablet: Table */}
->>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
       <div className="hidden md:block bg-[var(--bg-card)] border border-[var(--border)] rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -169,7 +110,6 @@ import { getCategoryIcon } from '../../utils/categoryIcons'
             </tr>
           </thead>
           <tbody>
-<<<<<<< HEAD
             {expenses.map((exp, i) => (
               <motion.tr
                 key={exp._id}
@@ -216,59 +156,6 @@ import { getCategoryIcon } from '../../utils/categoryIcons'
                 </td>
               </motion.tr>
             ))}
-=======
-            {expenses.map((exp, i) => {
-              const { icon: Icon, color, bg } = getCategoryIcon(exp.category)
-              return (
-                <motion.tr
-                  key={exp._id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.03 }}
-                  className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--bg-secondary)]/50 transition"
-                >
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
-                        <Icon className={`w-4 h-4 ${color}`} />
-                      </div>
-                      <div>
-                        <p className="text-[var(--text-primary)] font-medium">{exp.title}</p>
-                        {exp.notes && <p className="text-[var(--text-secondary)] text-xs">{exp.notes}</p>}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5 text-[var(--text-secondary)]">{exp.category}</td>
-                  <td className="px-5 py-3.5 text-[var(--text-secondary)]">{exp.paymentMethod}</td>
-                  <td className="px-5 py-3.5 text-[var(--text-secondary)]">
-                    {new Date(exp.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <span className={`flex items-center justify-end gap-1 font-medium ${exp.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
-                      {exp.type === 'income' ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
-                      ₹{exp.amount.toLocaleString('en-IN')}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => onEdit(exp)}
-                        className="p-1.5 rounded-md text-[var(--text-secondary)] hover:text-primary hover:bg-primary/10 transition"
-                      >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => onDelete(exp._id)}
-                        className="p-1.5 rounded-md text-[var(--text-secondary)] hover:text-red-400 hover:bg-red-500/10 transition"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
-                </motion.tr>
-              )
-            })}
->>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
           </tbody>
         </table>
       </div>

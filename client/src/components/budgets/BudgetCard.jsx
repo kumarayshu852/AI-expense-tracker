@@ -1,10 +1,6 @@
 import { motion } from 'framer-motion'
 import { Trash2, AlertTriangle } from 'lucide-react'
-<<<<<<< HEAD
 import { iconComponents, getCategoryIcon } from '../../utils/categoryIcons'
-=======
-import { getCategoryIcon } from '../../utils/categoryIcons'
->>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
 
 const getBarColor = (percentage) => {
   if (percentage >= 100) return 'bg-red-500'
@@ -45,7 +41,6 @@ const BudgetCard = ({ budget, onDelete, categories = [] }) => {
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
-<<<<<<< HEAD
           <div
             className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${bg}`}
             style={customColor ? { backgroundColor: `${customColor}20` } : {}}
@@ -54,10 +49,6 @@ const BudgetCard = ({ budget, onDelete, categories = [] }) => {
               className={`w-5 h-5 ${color}`}
               style={customColor ? { color: customColor } : {}}
             />
-=======
-          <div className={`w-10 h-10 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
-            <Icon className={`w-5 h-5 ${color}`} />
->>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
           </div>
           <div>
             <p className="text-[var(--text-primary)] font-medium">{category}</p>

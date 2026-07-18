@@ -1,36 +1,6 @@
 const mongoose = require('mongoose');
 
-<<<<<<< HEAD
 const PAYMENT_METHODS = ['Cash', 'Credit Card', 'Debit Card', 'UPI', 'Net Banking', 'Others'];
-=======
-
-const CATEGORIES = [
-  'Food & Dining',
-  'Groceries',
-  'Transport',
-  'Shopping',
-  'Bills & Utilities',
-  'Entertainment',
-  'Health',
-  'Education',
-  'Travel',
-  'Investment',
-  'Loans & Lending',
-  'Personal & Lifestyle',
-  'Income',
-  'Others',
-];
-
-
-const PAYMENT_METHODS = [
-    'Cash',
-    'Credit Card',
-    'Debit Card',
-    'UPI',
-    'Net Banking',
-    'Others',
-];
->>>>>>> a40901cbfa97b0fcaaf6d09e4ee1037659ca3e41
 
 const expenseSchema = new mongoose.Schema(
   {
