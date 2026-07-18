@@ -4,16 +4,14 @@ const { body } = require('express-validator');
 const expenseController = require('../controllers/expenseController');
 const { protect } = require('../middleware/authMiddleware');
 const validate = require('../middleware/validate');
-const Expense = require('../models/Expense');
 
-const CATEGORIES = Expense.schema.path('category').enumValues;
-const PAYMENT_METHODS = Expense.schema.path('paymentMethod').enumValues;
+const PAYMENT_METHODS = ['Cash', 'Credit Card', 'Debit Card', 'UPI', 'Net Banking', 'Others'];
 
 const expenseValidation = [
   body('title').trim().notEmpty().withMessage('Title is required'),
   body('amount').isFloat({ min: 0 }).withMessage('Amount must be a positive number'),
   body('type').isIn(['expense', 'income']).withMessage('Type must be expense or income'),
-  body('category').isIn(CATEGORIES).withMessage('Invalid category'),
+  body('category').trim().notEmpty().withMessage('Category is required'),
   body('paymentMethod').optional().isIn(PAYMENT_METHODS).withMessage('Invalid payment method'),
   body('date').optional().isISO8601().withMessage('Invalid date format'),
 ];

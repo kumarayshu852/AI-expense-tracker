@@ -1,14 +1,14 @@
 require('dotenv').config();
-const app=require('./app');
-const connectDB=require('./config/db');
+const app = require('./app');
+const connectDB = require('./config/db');
+const { startCronJobs } = require('./services/cronService');
 
-const PORT =process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
-connectDB().then(()=>{
-    app.listen(PORT,()=>{
-        console.log(`serve runing on PORT ${PORT}`);
-    });
-}).catch((err) => {
-    console.error("Database connection failed:", err);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    // DB connect hone ke baad cron job start karo
+    startCronJobs();
+  });
 });
-

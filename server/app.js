@@ -11,7 +11,10 @@ const expenseRoutes =require('./routes/expenseRoutes');
 const budgetRoutes=require('./routes/budgetRoutes');
 const analyticsRoutes=require('./routes/analyticsRoutes')
 const aiRoutes =require('./routes/aiRoutes')
+const categoryRoutes = require('./routes/categoryRoutes');
 const {errorHandler, notFound} =require('./middleware/errorMiddleware')
+const recurringRoutes =require('./routes/recurringRoutes')
+const goalRoutes =require('./routes/goalRoutes');
 
 const app=express();
 
@@ -42,6 +45,9 @@ app.use('/api/expenses',expenseRoutes);
 app.use('/api/budgets',budgetRoutes);
 app.use('/api/analytics',analyticsRoutes);
 app.use('/api/ai',aiRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/recurring', recurringRoutes);
+app.use('/api/goals',goalRoutes);
 
 app.get('/api/health',(req,res)=>{
     res.json({success:true,message:'server is running'});

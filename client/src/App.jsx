@@ -12,7 +12,10 @@ import Budgets from './pages/Budgets'
 import Analytics from './pages/Analytics'
 import AIAssistant from './pages/AIAssistant'
 import Settings from './pages/Settings'
+import Recurring from './pages/Recurring'
+import Goals from './pages/Goals'
 import DashboardLayout from './components/layout/DashboardLayout'
+import BudgetAlerts from './components/shared/BudegetAlerts'
 
 function App() {
   return (
@@ -20,6 +23,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <ServerStatusBanner />
+          <BudgetAlerts />
           <Router>
             <Routes>
               <Route path='/login' element={<Login />} />
@@ -29,9 +33,11 @@ function App() {
                 <Route element={<DashboardLayout />}>
                   <Route path='/dashboard' element={<Dashboard />} />
                   <Route path='/expenses' element={<Expenses />} />
+                  <Route path='/recurring' element={<Recurring />} />
                   <Route path='/budgets' element={<Budgets />} />
                   <Route path='/analytics' element={<Analytics />} />
                   <Route path='/ai-assistant' element={<AIAssistant />} />
+                  <Route path='/goals' element={<Goals />} />
                   <Route path='/settings' element={<Settings />} />
                 </Route>
               </Route>

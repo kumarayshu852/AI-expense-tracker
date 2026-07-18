@@ -4,37 +4,43 @@ import { motion } from 'framer-motion'
 import BudgetForm from '../components/budgets/BudgetForm'
 import BudgetCard from '../components/budgets/BudgetCard'
 import { getBudgets, createBudget, deleteBudget } from '../services/budgetService'
+import { getCategories } from '../services/categoryService'
 
 const Budgets = () => {
   const [budgets, setBudgets] = useState([])
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [isFormOpen, setIsFormOpen] = useState(false)
 
-  const fetchBudgets = async () => {
+  const fetchData = async () => {
     try {
-      const res = await getBudgets()
-      setBudgets(res.data.data.budgets)
+      const [budgetRes, catRes] = await Promise.all([
+        getBudgets(),
+        getCategories(),
+      ])
+      setBudgets(budgetRes.data.data.budgets)
+      setCategories(catRes.data.data.categories)
     } catch (err) {
-      console.error('Failed to fetch budgets:', err)
+      console.error('Failed to fetch:', err)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchBudgets()
+    fetchData()
   }, [])
 
   const handleSubmit = async (formData) => {
     await createBudget(formData)
-    fetchBudgets()
+    fetchData()
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('you want to delete this budget')) return
+    if (!window.confirm('Yeh budget delete karna hai?')) return
     try {
       await deleteBudget(id)
-      fetchBudgets()
+      fetchData()
     } catch (err) {
       console.error('Failed to delete:', err)
     }
@@ -71,12 +77,17 @@ const Budgets = () => {
         </div>
       ) : budgets.length === 0 ? (
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-10 text-center">
-          <p className="text-[var(--text-secondary)] text-sm">No budget set for this month. Create a new one!</p>
+          <p className="text-[var(--text-secondary)] text-sm">Koi budget set nahi hai is mahine ka. Naya set karo!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {budgets.map((budget) => (
-            <BudgetCard key={budget._id} budget={budget} onDelete={handleDelete} />
+            <BudgetCard
+              key={budget._id}
+              budget={budget}
+              onDelete={handleDelete}
+              categories={categories}
+            />
           ))}
         </div>
       )}

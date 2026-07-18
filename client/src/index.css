@@ -38,8 +38,58 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
 }
 
+/* ===== SIMPLE UI ===== */
+.ui-simple .bg-\[var\(--bg-card\)\] {
+  background-color: var(--bg-card) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.ui-simple .rounded-xl {
+  border-radius: 8px !important;
+}
+
+.ui-simple .rounded-2xl {
+  border-radius: 10px !important;
+}
+
+/* ===== GLASS UI ===== */
+.ui-glass .bg-\[var\(--bg-card\)\] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.light.ui-glass .bg-\[var\(--bg-card\)\] {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+}
+
+.ui-glass .bg-\[var\(--bg-secondary\)\] {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.ui-glass aside {
+  background-color: rgba(17, 17, 17, 0.7) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.light.ui-glass aside {
+  background-color: rgba(245, 243, 238, 0.7) !important;
+}
+
+/* ===== PREMIUM UI (default) ===== */
+.ui-premium .bg-\[var\(--bg-card\)\] {
+  background-color: var(--bg-card);
+}
+
+/* ===== Scrollbar ===== */
 ::-webkit-scrollbar {
   width: 6px;
 }

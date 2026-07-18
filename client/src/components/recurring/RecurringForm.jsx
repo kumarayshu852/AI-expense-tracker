@@ -5,6 +5,13 @@ import { PAYMENT_METHODS } from '../../utils/constants'
 import { getCategories } from '../../services/categoryService'
 import { iconComponents } from '../../utils/categoryIcons'
 
+const FREQUENCIES = [
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'yearly', label: 'Yearly' },
+]
+
 const emptyForm = {
   title: '',
   amount: '',
@@ -12,24 +19,23 @@ const emptyForm = {
   category: '',
   paymentMethod: 'Cash',
   notes: '',
-  date: new Date().toISOString().split('T')[0],
+  frequency: 'monthly',
+  startDate: new Date().toISOString().split('T')[0],
 }
 
-const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
+const RecurringForm = ({ isOpen, onClose, onSubmit }) => {
   const [form, setForm] = useState(emptyForm)
   const [loading, setLoading] = useState(false)
   const [categories, setCategories] = useState([])
   const [catLoading, setCatLoading] = useState(true)
 
-  // Categories fetch karo (default + custom)
   useEffect(() => {
     const fetchCats = async () => {
       try {
         const res = await getCategories()
         setCategories(res.data.data.categories)
-        // Agar form empty hai toh pehli category default set karo
-        if (!initialData) {
-          setForm((prev) => ({ ...prev, category: res.data.data.categories[0]?.name || '' }))
+        if (res.data.data.categories.length > 0) {
+          setForm((prev) => ({ ...prev, category: res.data.data.categories[0].name }))
         }
       } catch (err) {
         console.error('Failed to fetch categories:', err)
@@ -40,23 +46,6 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
     if (isOpen) fetchCats()
   }, [isOpen])
 
-  // Edit mode mein purana data form mein bhar do
-  useEffect(() => {
-    if (initialData) {
-      setForm({
-        title: initialData.title,
-        amount: initialData.amount,
-        type: initialData.type,
-        category: initialData.category,
-        paymentMethod: initialData.paymentMethod,
-        notes: initialData.notes || '',
-        date: new Date(initialData.date).toISOString().split('T')[0],
-      })
-    } else {
-      setForm(emptyForm)
-    }
-  }, [initialData, isOpen])
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -66,6 +55,7 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
     setLoading(true)
     try {
       await onSubmit({ ...form, amount: Number(form.amount) })
+      setForm(emptyForm)
       onClose()
     } finally {
       setLoading(false)
@@ -76,7 +66,6 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -85,7 +74,6 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -93,9 +81,7 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
             className="relative z-10 w-full max-w-md bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-                {initialData ? 'Edit Transaction' : 'Add Transaction'}
-              </h2>
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">Add Recurring Transaction</h2>
               <button onClick={onClose} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
@@ -126,7 +112,7 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                 name="title"
                 value={form.title}
                 onChange={handleChange}
-                placeholder="Title (e.g. Swiggy Order)"
+                placeholder="Title (e.g. Monthly Rent)"
                 required
                 className="w-full bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-primary"
               />
@@ -142,7 +128,28 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                 className="w-full bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-primary"
               />
 
-              {/* Category select — icon ke saath */}
+              {/* Frequency selector */}
+              <div>
+                <label className="text-xs text-[var(--text-secondary)] mb-1.5 block">Frequency</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {FREQUENCIES.map((f) => (
+                    <button
+                      key={f.value}
+                      type="button"
+                      onClick={() => setForm({ ...form, frequency: f.value })}
+                      className={`py-2 rounded-lg text-xs font-medium transition ${
+                        form.frequency === f.value
+                          ? 'bg-primary text-white'
+                          : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-primary/50 border border-[var(--border)]'
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Category picker */}
               <div>
                 <label className="text-xs text-[var(--text-secondary)] mb-1.5 block">Category</label>
                 {catLoading ? (
@@ -151,7 +158,7 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                     <span className="text-sm text-[var(--text-secondary)]">Loading...</span>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto pr-1">
+                  <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
                     {categories.map((cat) => {
                       const IconComp = iconComponents[cat.icon] || iconComponents.Package
                       const isSelected = form.category === cat.name
@@ -160,7 +167,7 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                           key={cat.name}
                           type="button"
                           onClick={() => setForm({ ...form, category: cat.name })}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition text-left ${
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition text-left ${
                             isSelected
                               ? 'border border-primary bg-primary/10 text-[var(--text-primary)]'
                               : 'border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-primary/50'
@@ -172,7 +179,7 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                           >
                             <IconComp className="w-3.5 h-3.5" style={{ color: cat.color }} />
                           </div>
-                          <span className="truncate text-xs">{cat.name}</span>
+                          <span className="truncate">{cat.name}</span>
                         </button>
                       )
                     })}
@@ -189,14 +196,17 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                 {PAYMENT_METHODS.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
 
-              <input
-                name="date"
-                type="date"
-                value={form.date}
-                onChange={handleChange}
-                required
-                className="w-full bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-primary"
-              />
+              <div>
+                <label className="text-xs text-[var(--text-secondary)] mb-1 block">Start Date</label>
+                <input
+                  name="startDate"
+                  type="date"
+                  value={form.startDate}
+                  onChange={handleChange}
+                  required
+                  className="w-full bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-primary"
+                />
+              </div>
 
               <textarea
                 name="notes"
@@ -212,9 +222,9 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading || !form.category}
-                className="w-full bg-gradient-to-r from-primary to-accent-cyan text-white font-medium py-2.5 rounded-lg flex items-center justify-center gap-2 disabled:opacity-60 mt-2"
+                className="w-full bg-gradient-to-r from-primary to-accent-cyan text-white font-medium py-2.5 rounded-lg flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : initialData ? 'Update' : 'Add Transaction'}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Add Recurring'}
               </motion.button>
             </form>
           </motion.div>
@@ -224,4 +234,4 @@ const ExpenseForm = ({ isOpen, onClose, onSubmit, initialData }) => {
   )
 }
 
-export default ExpenseForm
+export default RecurringForm

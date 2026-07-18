@@ -1,21 +1,17 @@
 import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LayoutDashboard,
-  Receipt,
-  PiggyBank,
-  BarChart3,
-  Sparkles,
-  Settings as SettingsIcon,
-  LogOut,
-  X,
+  LayoutDashboard, Receipt, PiggyBank, BarChart3,
+  Sparkles, Settings as SettingsIcon, LogOut, X, RefreshCw, Target,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/expenses', icon: Receipt, label: 'Expenses' },
+  { to: '/recurring', icon: RefreshCw, label: 'Recurring' },
   { to: '/budgets', icon: PiggyBank, label: 'Budgets' },
+  { to: '/goals', icon: Target, label: 'Goals' },
   { to: '/analytics', icon: BarChart3, label: 'Analytics' },
   { to: '/ai-assistant', icon: Sparkles, label: 'AI Assistant' },
   { to: '/settings', icon: SettingsIcon, label: 'Settings' },
@@ -33,13 +29,12 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
           <span className="text-[var(--text-primary)] font-semibold text-lg">Expense Tracker</span>
         </div>
-        {/* Close button — sirf mobile pe dikhega */}
         <button onClick={onClose} className="lg:hidden text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      <nav className="flex-1 px-3 space-y-1">
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -92,12 +87,10 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Desktop: always visible, fixed */}
       <aside className="hidden lg:flex w-64 h-screen bg-[var(--bg-secondary)] border-r border-[var(--border)] flex-col fixed left-0 top-0 transition-colors">
         {sidebarContent}
       </aside>
 
-      {/* Mobile: off-canvas drawer */}
       <AnimatePresence>
         {isOpen && (
           <>

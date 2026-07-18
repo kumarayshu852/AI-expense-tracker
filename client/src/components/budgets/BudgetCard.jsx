@@ -1,19 +1,6 @@
 import { motion } from 'framer-motion'
 import { Trash2, AlertTriangle } from 'lucide-react'
-
-const categoryEmoji = {
-  'Food & Dining': '🍔',
-  'Transport': '🚗',
-  'Shopping': '🛍️',
-  'Bills & Utilities': '💡',
-  'Entertainment': '🎬',
-  'Health': '🏥',
-  'Education': '📚',
-  'Travel': '✈️',
-  'Investment': '📈',
-  'Income': '💰',
-  'Others': '📦',
-}
+import { iconComponents, getCategoryIcon } from '../../utils/categoryIcons'
 
 const getBarColor = (percentage) => {
   if (percentage >= 100) return 'bg-red-500'
@@ -21,10 +8,29 @@ const getBarColor = (percentage) => {
   return 'bg-primary'
 }
 
-const BudgetCard = ({ budget, onDelete }) => {
+const BudgetCard = ({ budget, onDelete, categories = [] }) => {
   const { category, monthlyLimit, spent, remaining, percentage } = budget
   const isOverBudget = percentage >= 100
   const clampedPercentage = Math.min(percentage, 100)
+
+  // Default map se check karo, nahi mila toh custom categories mein dhundho
+  const getIcon = () => {
+    const defaultIcon = getCategoryIcon(category)
+    if (defaultIcon && defaultIcon.icon !== iconComponents.Package) return defaultIcon
+
+    const custom = categories.find((c) => c.name === category)
+    if (custom) {
+      return {
+        icon: iconComponents[custom.icon] || iconComponents.Package,
+        color: '',
+        bg: '',
+        customColor: custom.color,
+      }
+    }
+    return { icon: iconComponents.Package, color: 'text-gray-400', bg: 'bg-gray-500/10' }
+  }
+
+  const { icon: Icon, color, bg, customColor } = getIcon()
 
   return (
     <motion.div
@@ -34,7 +40,15 @@ const BudgetCard = ({ budget, onDelete }) => {
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl">{categoryEmoji[category] || '📦'}</span>
+          <div
+            className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${bg}`}
+            style={customColor ? { backgroundColor: `${customColor}20` } : {}}
+          >
+            <Icon
+              className={`w-5 h-5 ${color}`}
+              style={customColor ? { color: customColor } : {}}
+            />
+          </div>
           <div>
             <p className="text-[var(--text-primary)] font-medium">{category}</p>
             <p className="text-[var(--text-secondary)] text-xs">Monthly limit: ₹{monthlyLimit.toLocaleString('en-IN')}</p>
@@ -48,7 +62,6 @@ const BudgetCard = ({ budget, onDelete }) => {
         </button>
       </div>
 
-      {/* Progress bar */}
       <div className="w-full h-2 bg-[var(--bg-secondary)] rounded-full overflow-hidden mb-2">
         <motion.div
           initial={{ width: 0 }}

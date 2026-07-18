@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
+const FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
 const PAYMENT_METHODS = ['Cash', 'Credit Card', 'Debit Card', 'UPI', 'Net Banking', 'Others'];
 
-const expenseSchema = new mongoose.Schema(
+const recurringTransactionSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,8 +28,7 @@ const expenseSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: [true, 'Category is required'],
-      // Enum hata diya — ab koi bhi category string allow hogi (custom + default dono)
+      required: true,
       trim: true,
     },
     paymentMethod: {
@@ -41,16 +41,34 @@ const expenseSchema = new mongoose.Schema(
       trim: true,
       maxlength: [500, 'Notes cannot exceed 500 characters'],
     },
-    date: {
+    frequency: {
+      type: String,
+      enum: FREQUENCIES,
+      required: true,
+      default: 'monthly',
+    },
+    startDate: {
       type: Date,
+      required: true,
       default: Date.now,
+    },
+    nextDueDate: {
+      type: Date,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    lastProcessed: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }
 );
 
-expenseSchema.index({ userId: 1, date: -1 });
-expenseSchema.index({ userId: 1, category: 1 });
+recurringTransactionSchema.index({ userId: 1, isActive: 1, nextDueDate: 1 });
 
-module.exports = mongoose.model('Expense', expenseSchema);
-module.exports.PAYMENT_METHODS = PAYMENT_METHODS;
+module.exports = mongoose.model('RecurringTransaction', recurringTransactionSchema);
+module.exports.FREQUENCIES = FREQUENCIES;
