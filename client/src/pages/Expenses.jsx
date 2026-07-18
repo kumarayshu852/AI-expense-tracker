@@ -3,17 +3,9 @@ import { Plus, Loader2, Download, FileText, Search } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ExpenseForm from '../components/expenses/ExpenseForm'
 import MonthAccordion from '../components/expenses/MonthAccordion'
-
 import FilterBar from '../components/expenses/FilterBar'
 import { getExpenses, createExpense, updateExpense, deleteExpense } from '../services/expenseService'
 import { getCategories } from '../services/categoryService'
-
-import {
-  getExpenses,
-  createExpense,
-  updateExpense,
-  deleteExpense,
-} from '../services/expenseService'
 import { exportToCSV, exportToPDF } from '../utils/exportReports'
 import { groupExpensesByMonth, formatDateForSearch } from '../utils/groupByMonth'
 

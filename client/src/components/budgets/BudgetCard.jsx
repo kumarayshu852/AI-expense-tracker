@@ -10,7 +10,7 @@ const getBarColor = (percentage) => {
 
 const BudgetCard = ({ budget, onDelete, categories = [] }) => {
   const { category, monthlyLimit, spent, remaining, percentage } = budget
-  const { icon: Icon, color, bg } = getCategoryIcon(category)
+  const { icon: Icon, color, bg } = getCategoryIcon(category);
   const isOverBudget = percentage >= 100
   const clampedPercentage = Math.min(percentage, 100)
 
@@ -31,7 +31,7 @@ const BudgetCard = ({ budget, onDelete, categories = [] }) => {
     return { icon: iconComponents.Package, color: 'text-gray-400', bg: 'bg-gray-500/10' }
   }
 
-  const { icon: Icon, color, bg, customColor } = getIcon()
+  const { icon: Icon2, color: color2, bg: bg2, customColor } = getIcon();
 
   return (
     <motion.div
