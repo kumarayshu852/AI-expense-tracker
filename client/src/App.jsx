@@ -14,8 +14,9 @@ import AIAssistant from './pages/AIAssistant'
 import Settings from './pages/Settings'
 import Recurring from './pages/Recurring'
 import Goals from './pages/Goals'
+import BillSplits from './pages/BillSplits'
+import BillSplitDetail from './pages/BillSplitDetail'
 import DashboardLayout from './components/layout/DashboardLayout'
-import BudgetAlerts from './components/shared/BudegetAlerts'
 
 function App() {
   return (
@@ -23,7 +24,6 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <ServerStatusBanner />
-          <BudgetAlerts />
           <Router>
             <Routes>
               <Route path='/login' element={<Login />} />
@@ -35,9 +35,11 @@ function App() {
                   <Route path='/expenses' element={<Expenses />} />
                   <Route path='/recurring' element={<Recurring />} />
                   <Route path='/budgets' element={<Budgets />} />
+                  <Route path='/goals' element={<Goals />} />
                   <Route path='/analytics' element={<Analytics />} />
                   <Route path='/ai-assistant' element={<AIAssistant />} />
-                  <Route path='/goals' element={<Goals />} />
+                  <Route path='/billsplit' element={<BillSplits />} />
+                  <Route path='/billsplit/:id' element={<BillSplitDetail />} />
                   <Route path='/settings' element={<Settings />} />
                 </Route>
               </Route>

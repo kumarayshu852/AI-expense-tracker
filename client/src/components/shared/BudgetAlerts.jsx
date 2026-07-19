@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, X, TrendingUp } from 'lucide-react'
 import { getBudgets } from '../../services/budgetService'
@@ -6,14 +6,17 @@ import { getBudgets } from '../../services/budgetService'
 const BudgetAlerts = () => {
   const [alerts, setAlerts] = useState([])
   const [dismissed, setDismissed] = useState([])
+  const hasFetched = useRef(false)
 
   useEffect(() => {
+    // Sirf ek baar fetch karo — ref se ensure karo
+    if (hasFetched.current) return
+    hasFetched.current = true
+
     const fetchBudgets = async () => {
       try {
         const res = await getBudgets()
         const budgets = res.data.data.budgets
-
-        // 80% ya zyada use ho gayi budgets ko alert mein dikhao
         const overBudgets = budgets.filter(
           (b) => b.percentage >= 80 && b.monthlyLimit > 0
         )
@@ -22,8 +25,9 @@ const BudgetAlerts = () => {
         console.error('Budget alert fetch error:', err)
       }
     }
+
     fetchBudgets()
-  }, [])
+  }, []) // Empty array — sirf mount pe ek baar
 
   const visibleAlerts = alerts.filter((a) => !dismissed.includes(a._id))
 
@@ -58,11 +62,9 @@ const BudgetAlerts = () => {
               </p>
               <p className="text-[var(--text-secondary)] text-xs mt-0.5">
                 <span className="text-[var(--text-primary)] font-medium">{alert.category}</span>
-                {' '}— {alert.percentage}% used 
+                {' '}— {alert.percentage}% used
                 {' '}(₹{alert.spent.toLocaleString('en-IN')} of ₹{alert.monthlyLimit.toLocaleString('en-IN')})
               </p>
-
-              {/* Progress bar */}
               <div className="w-full h-1.5 bg-[var(--bg-secondary)] rounded-full mt-2 overflow-hidden">
                 <div
                   className={`h-full rounded-full ${alert.percentage >= 100 ? 'bg-red-500' : 'bg-yellow-500'}`}

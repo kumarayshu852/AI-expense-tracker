@@ -2,7 +2,8 @@ import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Receipt, PiggyBank, BarChart3,
-  Sparkles, Settings as SettingsIcon, LogOut, X, RefreshCw, Target,
+  Sparkles, Settings as SettingsIcon, LogOut, X,
+  RefreshCw, Target, Users,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
@@ -14,6 +15,7 @@ const navItems = [
   { to: '/goals', icon: Target, label: 'Goals' },
   { to: '/analytics', icon: BarChart3, label: 'Analytics' },
   { to: '/ai-assistant', icon: Sparkles, label: 'AI Assistant' },
+  { to: '/billsplit', icon: Users, label: 'Bill Split' },
   { to: '/settings', icon: SettingsIcon, label: 'Settings' },
 ]
 

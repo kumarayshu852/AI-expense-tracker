@@ -75,7 +75,7 @@ const BudgetForm = ({ isOpen, onClose, onSubmit, existingCategories = [] }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Category picker */}
               <div>
-                <label className="text-xs text-[var(--text-secondary)] mb-2 block">Category choose karo</label>
+                <label className="text-xs text-[var(--text-secondary)] mb-2 block">Choose a category.</label>
                 {catLoading ? (
                   <div className="flex items-center gap-2 px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg">
                     <Loader2 className="w-4 h-4 animate-spin text-[var(--text-secondary)]" />

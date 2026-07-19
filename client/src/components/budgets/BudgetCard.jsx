@@ -84,7 +84,7 @@ const BudgetCard = ({ budget, onDelete, categories = [] }) => {
       {isOverBudget && (
         <div className="flex items-center gap-1.5 mt-2.5 text-xs text-red-400 bg-red-500/10 rounded-lg px-2.5 py-1.5">
           <AlertTriangle className="w-3.5 h-3.5" />
-          Budget cross ho gaya hai!
+          The budget has been exceeded!
         </div>
       )}
     </motion.div>

@@ -37,7 +37,7 @@ const Budgets = () => {
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Yeh budget delete karna hai?')) return
+    if (!window.confirm('Do you want to delete this budget?')) return
     try {
       await deleteBudget(id)
       fetchData()
@@ -77,7 +77,7 @@ const Budgets = () => {
         </div>
       ) : budgets.length === 0 ? (
         <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-10 text-center">
-          <p className="text-[var(--text-secondary)] text-sm">Koi budget set nahi hai is mahine ka. Naya set karo!</p>
+          <p className="text-[var(--text-secondary)] text-sm">There is no budget set for this month. Set a new one!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
